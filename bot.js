@@ -103,4 +103,4 @@ bot.on('messageReactionRemove', (reaction, user) => {
     
 });
 
-bot.login(botSettings.token);
+bot.login(process.env.token);
