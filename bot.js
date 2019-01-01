@@ -75,30 +75,58 @@ bot.on('raw', async event => {
 
 })
 
-let roles = {
-    roleFornite: "509335009019166740"
+let reactRoles = {
+    roleMember: "529234619753562122",
+    roleFornite: "529233484179439618",
+    roleOverwatch: "529233965962493972",
+    roleHearthstone: "529233552546594816",
+    roleKpop: "529234075177975808"
+};
+
+let reactMessage = {
+    msgMember: "529241509841862656",
+    msgFornite: "529243049348300820",
+    msgOverwatch: "529243050484957205",
+    msgHearthstone: "529243051575738380",
+    msgKpop: "529243052963921931"
 };
 
 bot.on('messageReactionAdd', (reaction, user) => {
 
-    if(reaction.message.id !== "509001343835570176") return
-    let member = bot.guilds.find("id", "508996046366572544").members.get(user.id);
-    let roleF = member.roles.has(roles.roleFornite)
+    let rMsg = reaction.message.id;
+    let msgCheck = rMsg == reactMessage.msgMember       ? "roleMember":
+                   rMsg == reactMessage.msgKpop         ? "roleKpop":
+                   rMsg == reactMessage.msgOverwatch    ? "roleOverwatch":
+                   rMsg == reactMessage.msgHearthstone  ? "roleHearthstone":
+                   rMsg == reactMessage.msgFornite      ? "roleFornite":
+                   null;
+
+    if(!msgCheck) return
+    let member = bot.guilds.find(x => x.id === "322271623543783424").members.get(user.id);
+    let roleF = member.roles.has(reactRoles[msgCheck])
 
     if(!roleF) {
-        member.addRole(roles.roleFornite).catch(console.error);
+        member.addRole(reactRoles[msgCheck]).catch(console.error);
     }
 
 });
 
 bot.on('messageReactionRemove', (reaction, user) => {
 
-    if(reaction.message.id !== "509001343835570176") return
-    let member = bot.guilds.find("id", "508996046366572544").members.get(user.id);
-    let roleF = member.roles.has(roles.roleFornite)
+    let rMsg = reaction.message.id;
+    let msgCheck = rMsg == reactMessage.msgMember       ? "roleMember":
+                   rMsg == reactMessage.msgKpop         ? "roleKpop":
+                   rMsg == reactMessage.msgOverwatch    ? "roleOverwatch":
+                   rMsg == reactMessage.msgHearthstone  ? "roleHearthstone":
+                   rMsg == reactMessage.msgFornite      ? "roleFornite":
+                   null;
+
+    if(!msgCheck) return
+    let member = bot.guilds.find(x => x.id === "322271623543783424").members.get(user.id);
+    let roleF = member.roles.has(reactRoles[msgCheck])
 
     if(roleF) {
-        member.removeRole(roles.roleFornite).catch(console.error);
+        member.removeRole(reactRoles[msgCheck]).catch(console.error);
     }
     
 });
