@@ -80,7 +80,8 @@ let reactRoles = {
     roleFornite: "529233484179439618",
     roleOverwatch: "529233965962493972",
     roleHearthstone: "529233552546594816",
-    roleKpop: "529234075177975808"
+    roleApex: "553067897619087370",
+    roleKpop: "529234075177975808"    
 };
 
 let reactMessage = {
@@ -88,7 +89,9 @@ let reactMessage = {
     msgFornite: "529243049348300820",
     msgOverwatch: "529243050484957205",
     msgHearthstone: "529243051575738380",
+    msgApex: "553069057625030659",
     msgKpop: "529243052963921931"
+    
 };
 
 bot.on('messageReactionAdd', (reaction, user) => {
@@ -99,6 +102,7 @@ bot.on('messageReactionAdd', (reaction, user) => {
                    rMsg == reactMessage.msgOverwatch    ? "roleOverwatch":
                    rMsg == reactMessage.msgHearthstone  ? "roleHearthstone":
                    rMsg == reactMessage.msgFornite      ? "roleFornite":
+                   rMsg == reactMessage.msgApex         ? "roleApex":
                    null;
 
     if(!msgCheck) return
@@ -119,6 +123,7 @@ bot.on('messageReactionRemove', (reaction, user) => {
                    rMsg == reactMessage.msgOverwatch    ? "roleOverwatch":
                    rMsg == reactMessage.msgHearthstone  ? "roleHearthstone":
                    rMsg == reactMessage.msgFornite      ? "roleFornite":
+                   rMsg == reactMessage.msgApex         ?  "roleApex":
                    null;
 
     if(!msgCheck) return
@@ -131,4 +136,4 @@ bot.on('messageReactionRemove', (reaction, user) => {
     
 });
 
-bot.login(process.env.token);
+bot.login(process.env.token); //
