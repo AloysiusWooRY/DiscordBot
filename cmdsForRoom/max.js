@@ -1,10 +1,11 @@
-module.exports.run = async (bot, message, args) => {
-
 const tok = process.env.crypt;
 const rp = require('request-promise');
+
+module.exports.run = async (bot, message, args) => {
+
 const requestOptions = {
   method: 'GET',
-  uri: 'https://sandbox-api.coinmarketcap.com/v1/cryptocurrency/listings/latest',
+  url: 'https://sandbox-api.coinmarketcap.com/v1/cryptocurrency/listings/latest',
   qs: {
     'start': '1',
     'limit': '5000',
@@ -18,7 +19,7 @@ const requestOptions = {
 };
 
 rp(requestOptions).then(response => {
-  console.log('API call response:', response);
+  message.channel.send(response);
 }).catch((err) => {
   console.log('API call error:', err.message);
 });
