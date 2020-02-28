@@ -1,5 +1,6 @@
 module.exports.run = async (bot, message, args) => {
 
+const tok = process.env.crypt;
 const rp = require('request-promise');
 const requestOptions = {
   method: 'GET',
@@ -10,7 +11,7 @@ const requestOptions = {
     'convert': 'USD'
   },
   headers: {
-    'X-CMC_PRO_API_KEY': process.env.crypt
+    'X-CMC_PRO_API_KEY': tok
   },
   json: true,
   gzip: true
