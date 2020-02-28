@@ -18,6 +18,8 @@ const requestOptions = {
 
 rp(requestOptions).then(response => {
   message.channel.send(response);
+}).catch((err) => {
+  console.log('API call error:', err.message);
 });
 
     //message.channel.send("hi");
