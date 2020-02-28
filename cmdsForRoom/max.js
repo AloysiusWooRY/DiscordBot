@@ -17,7 +17,7 @@ const requestOptions = {
 };
 
 rp(requestOptions).then(response => {
-  message.channel.send('API call response:', response);
+  message.channel.send(response);
 });
 
     //message.channel.send("hi");
