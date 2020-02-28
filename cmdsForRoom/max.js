@@ -4,7 +4,7 @@ const tok = process.env.crypt;
 const rp = require('request-promise');
 const requestOptions = {
   method: 'GET',
-  uri: 'https://samdbox-api.coinmarketcap.com/v1/cryptocurrency/listings/latest',
+  uri: 'https://sandbox-api.coinmarketcap.com/v1/cryptocurrency/listings/latest',
   qs: {
     'start': '1',
     'limit': '5000',
