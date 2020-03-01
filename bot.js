@@ -174,7 +174,7 @@ function cryptoMax() {
                 let cryptoQuote = response.data.filter(d => d.symbol == x)[0].quote.USD
                 let quotePrice = cryptoQuote.price.toFixed(2).padStart(7, " ")
                 let quotePercentChg = cryptoQuote.percent_change_24h.toFixed(2).padStart(5, " ")
-                console.log(cryptoQuote)
+                //console.log(cryptoQuote)
 
                 if (quotePercentChg >= 5 || quotePercentChg <= -5) {
                     outstandingText += `${x}: ${quotePrice} (${quotePercentChg}%)\n`

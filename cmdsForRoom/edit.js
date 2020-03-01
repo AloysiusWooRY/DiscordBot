@@ -42,7 +42,7 @@ module.exports.run = async (bot, message, args) => {
 				break;
 
 			case 'timeset':
-				if (!args[1]) {
+				if (args[1] < 5) {
 					message.channel.send('Error: `Minimum 5 minutes`').then(msg => { msg.delete(3000) })
 				}
 				else{
