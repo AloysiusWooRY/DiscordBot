@@ -172,7 +172,7 @@ function cryptoMax() {
 
             for (x of cryptoArr) {
                 let cryptoQuote = response.data.filter(d => d.symbol == x)[0].quote.SGD
-                let quotePrice = cryptoQuote.price.toFixed(2).padStart(7, " ")
+                let quotePrice = cryptoQuote.price.toFixed(2).padStart(8, " ")
                 let quotePercentChg = cryptoQuote.percent_change_24h.toFixed(2).padStart(5, " ")
                 //console.log(cryptoQuote)
 
@@ -189,7 +189,7 @@ function cryptoMax() {
                 .setColor('#00ff00')
                 .addField('__Crypto Listings__', '```' + fieldText + '```', true)
                 .setTimestamp()
-                .setFooter('All prices in USD');
+                .setFooter('All prices in SGD');
             if (outstandingText) {
                 Embed.addField('__Outstanding__', '```' + outstandingText + '```', true)
                 Embed.setColor('#ff0000')
