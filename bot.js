@@ -146,7 +146,7 @@ const requestOptions = {
     qs: {
         'start': '1',
         'limit': '200',
-        'convert': 'USD'
+        'convert': 'SGD'
     },
     headers: {
         'X-CMC_PRO_API_KEY': process.env.crypt
@@ -171,7 +171,7 @@ function cryptoMax() {
             let outstandingText = ''
 
             for (x of cryptoArr) {
-                let cryptoQuote = response.data.filter(d => d.symbol == x)[0].quote.USD
+                let cryptoQuote = response.data.filter(d => d.symbol == x)[0].quote.SGD
                 let quotePrice = cryptoQuote.price.toFixed(2).padStart(7, " ")
                 let quotePercentChg = cryptoQuote.percent_change_24h.toFixed(2).padStart(5, " ")
                 //console.log(cryptoQuote)
