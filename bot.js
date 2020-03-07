@@ -178,12 +178,13 @@ function cryptoMax() {
 
                 if (quotePercentChg >= 5 || quotePercentChg <= -5) {
                     outstandingText += `${x}: ${quotePrice} (${quotePercentChg}%)\n`
-                    channelCrypto.send(`${roleCrypto} ${x} had change of ${quotePercentChg}%! (${quotePrice.replace(/\s/g, '')}USD)`)
+                    channelCrypto.send(`${roleCrypto} ${x} had change of ${quotePercentChg}%! (${quotePrice.replace(/\s/g, '')}SGD)`)
                 }
                 else {
                     fieldText += `${x}: ${quotePrice} (${quotePercentChg}%)\n`
                 }
             }
+
 
             const Embed = new Discord.RichEmbed()
                 .setColor('#00ff00')
