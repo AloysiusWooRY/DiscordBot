@@ -1,9 +1,9 @@
-//const botSettings = require("./botsettings.json");
 const Discord = require("discord.js");
 const fs = require("fs");
 const rp = require('request-promise');
 const prefix = "!" || botSettings.prefix;
 const bot = new Discord.Client({});
+const exclamationJSON = require('./exclamation.json');
 bot.commands = new Discord.Collection();
 
 fs.readdir("./cmdsForRoom/", (err, files) => {
@@ -156,47 +156,63 @@ const requestOptions = {
 
 function cryptoMax() {
 
-    let channelCrypto = bot.guilds.find(x => x.id === "681399606093152278").channels.find(x => x.id === "682773483884642304")
-    let roleCrypto = bot.guilds.find(x => x.id === "681399606093152278").roles.find(y => y.id === "683145638225248277");
-    bot.guilds.find(x => x.id === "681399606093152278").channels.find(x => x.id === "683229417513811988").fetchMessage('683537412592369664').then(configMsg => {
+    let guildCrypto = bot.guilds.find(x => x.name === "Eh lai")
+    let channelCrypto = guildCrypto.channels.find(x => x.name === "notification")
+    let channelData = guildCrypto.channels.find(x => x.name === "data")
+    let roleCrypto = guildCrypto.roles.find(y => y.name === "Crypto");
+    guildCrypto.channels.find(x => x.name === "configs").fetchMessage('683537412592369664').then(configMsg => {
 
         let parseJson = JSON.parse(configMsg.content)
         let cryptoArr = parseJson.crypto
         let timeSet = parseJson.time * 60 * 1000
+        let thresholdNum = parseJson.threshold
 
         rp(requestOptions).then(response => {
 
             module.exports.responseSave = response
             let fieldText = ''
             let outstandingText = ''
+            let notiArr = []
 
             for (x of cryptoArr) {
                 let cryptoQuote = response.data.filter(d => d.symbol == x)[0].quote.SGD
                 let quotePrice = cryptoQuote.price.toFixed(2).padStart(8, " ")
                 let quotePercentChg = cryptoQuote.percent_change_24h.toFixed(2).padStart(5, " ")
-                //console.log(cryptoQuote)
 
-                if (quotePercentChg >= 5 || quotePercentChg <= -5) {
+                if (quotePercentChg >= thresholdNum || quotePercentChg <= (-1 * thresholdNum)) {
+                    //let randomEx = exclamationJSON.exclamation[Math.floor(Math.random() * exclamationJSON.exclamation.length)]
                     outstandingText += `${x}: ${quotePrice} (${quotePercentChg}%)\n`
-                    channelCrypto.send(`${roleCrypto} ${x} had change of ${quotePercentChg}%! (${quotePrice.replace(/\s/g, '')}SGD)`)
+                    notiArr.push(`${x}: ${quotePercentChg}%`)
                 }
                 else {
                     fieldText += `${x}: ${quotePrice} (${quotePercentChg}%)\n`
                 }
             }
 
-
             const Embed = new Discord.RichEmbed()
+                .setTitle('__Crypto Listings__')
                 .setColor('#00ff00')
-                .addField('__Crypto Listings__', '```' + fieldText + '```', true)
                 .setTimestamp()
                 .setFooter('All prices in SGD');
+
+            if (fieldText) {
+                Embed.setDescription('```' + fieldText + '```')
+            }
             if (outstandingText) {
-                Embed.addField('__Outstanding__', '```' + outstandingText + '```', true)
+                Embed.addField('⠀', `__*Outstanding(+-${thresholdNum}%)*__` + '```' + outstandingText + '```', true)
                 Embed.setColor('#ff0000')
             }
 
-            channelCrypto.send(Embed);
+            channelCrypto.fetchMessage('688220633553043522').then(msg => msg.edit(Embed)).catch(console.error);
+
+
+            channelCrypto.fetchMessages().then(msgs => {
+                let oldNoti = msgs.filter(m => m.content.startsWith('[ALERT]'))
+                channelCrypto.bulkDelete(oldNoti)
+                if(notiArr.length > 0 ) channelCrypto.send("[ALERT] " + notiArr.join(' | ') + ' ' + roleCrypto)
+            }).catch(console.error);
+
+
 
 
         }).catch((err) => {

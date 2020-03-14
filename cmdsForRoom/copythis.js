@@ -1,7 +1,7 @@
 module.exports.run = async (bot, message, args) => {
-    message.channel.send("hi");
+    message.channel.send("idk");
 }
 
 module.exports.help = {
-    name: "hi"
+    name: "why"
 }

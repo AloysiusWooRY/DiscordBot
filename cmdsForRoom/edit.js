@@ -50,17 +50,24 @@ module.exports.run = async (bot, message, args) => {
 				}
 				break;
 
+			case 'thresholdset':
+				printText(configs, cryptoArr, timeSet, args[1])
+				break;
+
 			case 'test':
 				console.log(parseJson, parseJson.crypto)
 		}
 
 	}
 
-	function printText(configs, cryptoArr, time) {
+	function printText(configs, cryptoArr, time, threshold) {
 
 		let newJSON = {}
 		newJSON["crypto"] = cryptoArr
 		newJSON["time"] = time
+		if(threshold){
+			newJSON["threshold"] = threshold	
+		}
 
 		configs.edit(JSON.stringify(newJSON))
 	}
