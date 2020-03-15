@@ -1,5 +1,6 @@
 const Discord = require("discord.js");
-const fs = require("fs");
+const plotly = require('plotly')("Alloy", process.env.plotlyKey)
+const fs = require('fs');
 const rp = require('request-promise');
 const prefix = "!" || botSettings.prefix;
 const bot = new Discord.Client({});
@@ -157,7 +158,7 @@ const requestOptions = {
 function cryptoMax() {
 
     let guildCrypto = bot.guilds.find(x => x.name === "Eh lai")
-    let channelCrypto = guildCrypto.channels.find(x => x.name === "notification")
+    let channelCrypto = guildCrypto.channels.find(x => x.name === "infopanel")
     let channelData = guildCrypto.channels.find(x => x.name === "data")
     let roleCrypto = guildCrypto.roles.find(y => y.name === "Crypto");
     guildCrypto.channels.find(x => x.name === "configs").fetchMessage('683537412592369664').then(configMsg => {
@@ -167,12 +168,14 @@ function cryptoMax() {
         let timeSet = parseJson.time * 60 * 1000
         let thresholdNum = parseJson.threshold
 
+
         rp(requestOptions).then(response => {
 
             module.exports.responseSave = response
             let fieldText = ''
             let outstandingText = ''
             let notiArr = []
+            let dataObj = {}
 
             for (x of cryptoArr) {
                 let cryptoQuote = response.data.filter(d => d.symbol == x)[0].quote.SGD
@@ -187,6 +190,7 @@ function cryptoMax() {
                 else {
                     fieldText += `${x}: ${quotePrice} (${quotePercentChg}%)\n`
                 }
+                dataObj[x] = quotePrice.trim()
             }
 
             const Embed = new Discord.RichEmbed()
@@ -203,15 +207,84 @@ function cryptoMax() {
                 Embed.setColor('#ff0000')
             }
 
-            channelCrypto.fetchMessage('688220633553043522').then(msg => msg.edit(Embed)).catch(console.error);
-
-
+            //Push to UI
             channelCrypto.fetchMessages().then(msgs => {
-                let oldNoti = msgs.filter(m => m.content.startsWith('[ALERT]'))
-                channelCrypto.bulkDelete(oldNoti)
-                if(notiArr.length > 0 ) channelCrypto.send("[ALERT] " + notiArr.join(' | ') + ' ' + roleCrypto)
-            }).catch(console.error);
+                channelCrypto.bulkDelete(msgs)
+            })
 
+            channelData.send(JSON.stringify(dataObj))
+
+            let now = new Date()
+            let yesterday = now.getTime() - 86400000
+
+            lots_of_messages_getter(channelData, 300).then(msgs => {
+                //console.log(Object.keys(msgs).length)
+                let timeArr = msgs.filter(x => x.content.startsWith("{")).map(x => {
+                    if (x.createdTimestamp >= yesterday) {
+                        let d = new Date(x.createdTimestamp);
+                        d.setHours(d.getHours() + 8)
+                        return d
+                    }
+                })
+                let valueArr = msgs.filter(x => x.content.startsWith("{")).map(y => JSON.parse(y.content))
+
+                guildCrypto.channels.find(x => x.name === "configs").fetchMessage('683537412592369664').then(configMsg => {
+
+                    for (let i = 0; i < cryptoArr.length; i++) {
+                        let targetedCrypto = []
+                        for (y of valueArr) {
+                            targetedCrypto.push(y[cryptoArr[i]])
+                        }
+                        var trace1 = {
+                            x: timeArr,
+                            y: targetedCrypto,
+                            type: "scatter"
+                        };
+
+                        var figure = { 'data': [trace1] };
+
+                        var imgOpts = {
+                            format: 'png',
+                            width: 550,
+                            height: 250,
+                        };
+
+                        const templateEmbed = {
+                            color: 0xffffff,
+                            title: cryptoArr[i].toUpperCase(),
+                            image: {
+                                url: `attachment://${i}.png`
+                            }
+                        }
+
+                        channelCrypto.send({ files: [`./${i}.png`], embed: templateEmbed }).then(() => {
+                            if (i == 0) {
+                                channelCrypto.send(Embed)
+                                if (notiArr.length > 0) {
+
+                                    let now = new Date()
+                                    let cd = parseJson.cd
+                                    let cdTimestamp = parseJson.cdTimestamp
+
+                                    if (now.getTime() > (cdTimestamp + cd * 60 * 1000)) {
+                                        channelCrypto.send("[ALERT] " + notiArr.join(' | ') + ' ' + roleCrypto)
+                                        parseJson.cdTimestamp = now.getTime()
+                                        configMsg.edit(JSON.stringify(parseJson))
+                                    }
+                                }
+                            }
+                        })
+
+                        plotly.getImage(figure, imgOpts, function (error, imageStream) {
+                            if (error) return console.log(error);
+
+                            var fileStream = fs.createWriteStream(`${i}.png`);
+                            imageStream.pipe(fileStream);
+                            //channelCrypto.send({ files: [`./${i}.png`], embed: templateEmbed })
+                        });
+                    }
+                })
+            })
 
 
 
@@ -220,6 +293,28 @@ function cryptoMax() {
         });
         resety(timeSet)
     })
+}
+
+async function lots_of_messages_getter(channel, limit = 300) {
+    const sum_messages = [];
+    let last_id;
+
+    while (true) {
+        const options = { limit: 100 };
+        if (last_id) {
+            options.before = last_id;
+        }
+
+        const messages = await channel.fetchMessages(options);
+        sum_messages.push(...messages.array());
+        last_id = messages.last().id;
+
+        if (messages.size != 100 || sum_messages >= limit) {
+            break;
+        }
+    }
+
+    return sum_messages;
 }
 
 function resety(timeSet) {

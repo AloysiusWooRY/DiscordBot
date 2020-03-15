@@ -7,22 +7,26 @@ module.exports.run = async (bot, message, args) => {
 	message.channel.fetchMessage('683537412592369664').then(message => switchy(message)).catch(console.error);
 	let response = mainBot.responseSave
 
+
 	function switchy(configs) {
+
 		let parseJson = JSON.parse(configs.content)
 		let cryptoArr = parseJson.crypto
 		let timeSet = parseJson.time
+		let threshold = parseJson.threshold
+		let cooldown = parseJson.cd
 
 		switch (args[0]) {
 			case 'add':
 				let checkQuote = response.data.filter(d => d.symbol == args[1])
 				console.log(cryptoArr)
-				if (!cryptoArr.includes(args[1]) && checkQuote.length != 0) {
+				if (!cryptoArr.includes(args[1]) && checkQuote.length != 0 && cryptoArr.length <= 3) {
 					cryptoArr.push(args[1])
 				}
 				else {
-					message.channel.send('Error: `Name not found in Database`').then(msg => { msg.delete(3000) })
+					message.channel.send('Error: `Name not found in Database or there\'s already 3`').then(msg => { msg.delete(3000) })
 				}
-				printText(configs, cryptoArr, timeSet)
+				printText(configs, cryptoArr)
 				break;
 
 			case 'remove':
@@ -33,7 +37,7 @@ module.exports.run = async (bot, message, args) => {
 				else {
 					message.channel.send('Error: `Name not found`').then(msg => { msg.delete(3000) })
 				}
-				printText(configs, cryptoArr, timeSet)
+				printText(configs, cryptoArr)
 
 				break;
 
@@ -45,7 +49,7 @@ module.exports.run = async (bot, message, args) => {
 				if (args[1] < 5) {
 					message.channel.send('Error: `Minimum 5 minutes`').then(msg => { msg.delete(3000) })
 				}
-				else{
+				else {
 					printText(configs, cryptoArr, args[1])
 				}
 				break;
@@ -54,20 +58,24 @@ module.exports.run = async (bot, message, args) => {
 				printText(configs, cryptoArr, timeSet, args[1])
 				break;
 
+			case 'cdset':
+				printText(configs, cryptoArr, timeSet, threshold, args[1])
+				break;
+
 			case 'test':
-				console.log(parseJson, parseJson.crypto)
+				printText(configs, cryptoArr, timeSet, threshold, "60")
+				break;
 		}
 
 	}
 
-	function printText(configs, cryptoArr, time, threshold) {
+	function printText(configs, cryptoArr, time = timeSet, th = threshold, cd = cooldown) {
 
-		let newJSON = {}
+		let newJSON = JSON.parse(configs.content)
 		newJSON["crypto"] = cryptoArr
 		newJSON["time"] = time
-		if(threshold){
-			newJSON["threshold"] = threshold	
-		}
+		newJSON["threshold"] = th
+		newJSON["cd"] = cd
 
 		configs.edit(JSON.stringify(newJSON))
 	}
