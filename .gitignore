@@ -1,4 +1,5 @@
 node_modules/
 package-lock.json
 mongo.js
-./test.js
+cmdsForRoom/test.js
+cmdsForRoom/test2.js
