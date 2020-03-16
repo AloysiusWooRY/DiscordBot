@@ -26,7 +26,7 @@ module.exports.run = async (bot, message, args) => {
 				else {
 					message.channel.send('Error: `Name not found in Database or there\'s already 3`').then(msg => { msg.delete(3000) })
 				}
-				printText(configs, cryptoArr)
+				printText(configs, cryptoArr, timeSet, threshold, cooldown)
 				break;
 
 			case 'remove':
@@ -37,7 +37,7 @@ module.exports.run = async (bot, message, args) => {
 				else {
 					message.channel.send('Error: `Name not found`').then(msg => { msg.delete(3000) })
 				}
-				printText(configs, cryptoArr)
+				printText(configs, cryptoArr, timeSet, threshold, cooldown)
 
 				break;
 
@@ -50,12 +50,12 @@ module.exports.run = async (bot, message, args) => {
 					message.channel.send('Error: `Minimum 5 minutes`').then(msg => { msg.delete(3000) })
 				}
 				else {
-					printText(configs, cryptoArr, args[1])
+					printText(configs, cryptoArr, args[1], threshold, cooldown)
 				}
 				break;
 
 			case 'thresholdset':
-				printText(configs, cryptoArr, timeSet, args[1])
+				printText(configs, cryptoArr, timeSet, args[1], cooldown)
 				break;
 
 			case 'cdset':
@@ -69,7 +69,7 @@ module.exports.run = async (bot, message, args) => {
 
 	}
 
-	function printText(configs, cryptoArr, time = timeSet, th = threshold, cd = cooldown) {
+	function printText(configs, cryptoArr, time, th, cd) {
 
 		let newJSON = JSON.parse(configs.content)
 		newJSON["crypto"] = cryptoArr
