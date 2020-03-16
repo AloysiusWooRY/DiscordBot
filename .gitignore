@@ -1,5 +1,5 @@
 node_modules/
 package-lock.json
-mongo.js
-cmdsForRoom/test.js
-cmdsForRoom/test2.js
+.mongo.js
+.test.js
+.test2.js

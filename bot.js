@@ -1,10 +1,11 @@
 const Discord = require("discord.js");
-const plotly = require('plotly')("Alloy", process.env.plotlyKey)
 const fs = require('fs');
 const rp = require('request-promise');
 const prefix = "!" || botSettings.prefix;
 const bot = new Discord.Client({});
 const exclamationJSON = require('./exclamation.json');
+const herokuTokens = [process.env.crypt,process.env.plotlyKey,process.env.token]
+const plotly = require('plotly')("Alloy", herokuTokens[1])
 bot.commands = new Discord.Collection();
 
 fs.readdir("./cmdsForRoom/", (err, files) => {
@@ -150,7 +151,7 @@ const requestOptions = {
         'convert': 'SGD'
     },
     headers: {
-        'X-CMC_PRO_API_KEY': process.env.crypt
+        'X-CMC_PRO_API_KEY': herokuTokens[0]
     },
     json: true,
 };
@@ -212,7 +213,7 @@ function cryptoMax() {
                 channelCrypto.bulkDelete(msgs)
             })
 
-            channelData.send(JSON.stringify(dataObj))
+            //channelData.send(JSON.stringify(dataObj))
 
             let now = new Date()
             let yesterday = now.getTime() - 86400000
@@ -266,7 +267,7 @@ function cryptoMax() {
                                     let cd = parseJson.cd
                                     let cdTimestamp = parseJson.cdTimestamp
 
-                                    if (now.getTime() > (cdTimestamp + cd * 60 * 1000)) {
+                                    if (now.getTime() < (cdTimestamp + cd * 60 * 1000)) {
                                         channelCrypto.send("[ALERT] " + notiArr.join(' | ') + ' ' + roleCrypto)
                                         parseJson.cdTimestamp = now.getTime()
                                         configMsg.edit(JSON.stringify(parseJson))
@@ -284,7 +285,9 @@ function cryptoMax() {
                         });
                     }
                 })
-            })
+            }).catch((err) => {
+                console.log('Get all error:', err.message);
+            });
 
 
 
@@ -301,6 +304,7 @@ async function lots_of_messages_getter(channel, limit = 300) {
 
     while (true) {
         const options = { limit: 100 };
+        console.log("tick!")
         if (last_id) {
             options.before = last_id;
         }
@@ -310,6 +314,7 @@ async function lots_of_messages_getter(channel, limit = 300) {
         last_id = messages.last().id;
 
         if (messages.size != 100 || sum_messages >= limit) {
+            console.log("Exited with: ", Object.keys(sum_messages).length )
             break;
         }
     }
@@ -321,4 +326,4 @@ function resety(timeSet) {
     setTimeout(cryptoMax, timeSet)
 }
 
-bot.login(process.env.token);
+bot.login(herokuTokens[2]);
