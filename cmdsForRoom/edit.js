@@ -59,7 +59,7 @@ module.exports.run = async (bot, message, args) => {
 				break;
 
 			case 'cdset':
-				printText(configs, cryptoArr, timeSet, threshold, args[1])
+				printText(configs, cryptoArr, timeSet, threshold, args[1]);
 				break;
 
 			case 'test':
