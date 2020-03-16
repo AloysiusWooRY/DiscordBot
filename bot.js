@@ -213,13 +213,12 @@ function cryptoMax() {
                 channelCrypto.bulkDelete(msgs)
             })
 
-            //channelData.send(JSON.stringify(dataObj))
+            channelData.send(JSON.stringify(dataObj))
 
             let now = new Date()
             let yesterday = now.getTime() - 86400000
 
             lots_of_messages_getter(channelData, 300).then(msgs => {
-                //console.log(Object.keys(msgs).length)
                 let timeArr = msgs.filter(x => x.content.startsWith("{")).map(x => {
                     if (x.createdTimestamp >= yesterday) {
                         let d = new Date(x.createdTimestamp);
@@ -267,7 +266,7 @@ function cryptoMax() {
                                     let cd = parseJson.cd
                                     let cdTimestamp = parseJson.cdTimestamp
 
-                                    if (now.getTime() < (cdTimestamp + cd * 60 * 1000)) {
+                                    if (now.getTime() > (cdTimestamp + cd * 60 * 1000)) {
                                         channelCrypto.send("[ALERT] " + notiArr.join(' | ') + ' ' + roleCrypto)
                                         parseJson.cdTimestamp = now.getTime()
                                         configMsg.edit(JSON.stringify(parseJson))
@@ -281,7 +280,6 @@ function cryptoMax() {
 
                             var fileStream = fs.createWriteStream(`${i}.png`);
                             imageStream.pipe(fileStream);
-                            //channelCrypto.send({ files: [`./${i}.png`], embed: templateEmbed })
                         });
                     }
                 })
