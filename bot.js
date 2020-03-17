@@ -204,7 +204,10 @@ function cryptoMax() {
                 Embed.setDescription('```' + fieldText + '```')
             }
             if (outstandingText) {
-                Embed.addField('⠀', `__*Outstanding(+-${thresholdNum}%)*__` + '```' + outstandingText + '```', true)
+
+let randomEx = exclamationJSON.exclamation[Math.floor(Math.random() * exclamationJSON.exclamation.length)]
+
+                Embed.addField('⠀', `__*${randomEx}(+-${thresholdNum}%)*__` + '```' + outstandingText + '```', true)
                 Embed.setColor('#ff0000')
             }
 
@@ -267,8 +270,7 @@ function cryptoMax() {
                                     let cdTimestamp = parseJson.cdTimestamp
 
                                     if (now.getTime() > (cdTimestamp + cd * 60 * 1000)) {
-let randomEx = exclamationJSON.exclamation[Math.floor(Math.random() * exclamationJSON.exclamation.length)]                                   
-channelCrypto.send(`${randomEx}\n` + notiArr.join('\n') + ' ' + roleCrypto)
+channelCrypto.send("[ALERT]\n" + notiArr.join('\n') + ' ' + roleCrypto)
                                         parseJson.cdTimestamp = now.getTime()
                                         configMsg.edit(JSON.stringify(parseJson))
                                     }
