@@ -207,7 +207,7 @@ function cryptoMax() {
 
                 let randomEx = exclamationJSON.exclamation[Math.floor(Math.random() * exclamationJSON.exclamation.length)]
 
-                Embed.addField('⠀', `__*${randomEx}(+-${thresholdNum}%)*__` + '```' + outstandingText + '```', true)
+                Embed.addField('⠀', `__*${randomEx} (+-${thresholdNum}%)*__` + '```' + outstandingText + '```', true)
                 Embed.setColor('#ff0000')
             }
 
