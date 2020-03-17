@@ -183,7 +183,7 @@ function cryptoMax() {
                 let quotePrice = cryptoQuote.price.toFixed(2).padStart(8, " ")
                 let quotePercentChg = cryptoQuote.percent_change_24h.toFixed(2).padStart(5, " ")
 
-                if (quotePercentChg >= thresholdNum || quotePercentChg <= (-1 * thresholdNum)) {
+                if (quotePercentChg >= (1*thresholdNum) || quotePercentChg <= (-1 * thresholdNum)) {
                     //let randomEx = exclamationJSON.exclamation[Math.floor(Math.random() * exclamationJSON.exclamation.length)]
                     outstandingText += `${x}: ${quotePrice} (${quotePercentChg}%)\n`
                     notiArr.push(`${x}: ${quotePrice} (${quotePercentChg}%)`)
