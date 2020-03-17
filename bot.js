@@ -267,7 +267,8 @@ function cryptoMax() {
                                     let cdTimestamp = parseJson.cdTimestamp
 
                                     if (now.getTime() > (cdTimestamp + cd * 60 * 1000)) {
-                                        channelCrypto.send("[ALERT]\n" + notiArr.join('\n') + ' ' + roleCrypto)
+let randomEx = exclamationJSON.exclamation[Math.floor(Math.random() * exclamationJSON.exclamation.length)]                                   
+channelCrypto.send(`${randomEx}\n` + notiArr.join('\n') + ' ' + roleCrypto)
                                         parseJson.cdTimestamp = now.getTime()
                                         configMsg.edit(JSON.stringify(parseJson))
                                     }
