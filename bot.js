@@ -4,7 +4,7 @@ const rp = require('request-promise');
 const prefix = "!" || botSettings.prefix;
 const bot = new Discord.Client({});
 const exclamationJSON = require('./exclamation.json');
-const herokuTokens = [process.env.crypt,process.env.plotlyKey,process.env.token]
+const herokuTokens = [process.env.crypt, process.env.plotlyKey, process.env.token]
 const plotly = require('plotly')("Alloy", herokuTokens[1])
 bot.commands = new Discord.Collection();
 
@@ -180,16 +180,16 @@ function cryptoMax() {
 
             for (x of cryptoArr) {
                 let cryptoQuote = response.data.filter(d => d.symbol == x)[0].quote.SGD
-                let quotePrice = cryptoQuote.price.toFixed(2).padStart(8, " ")
-                let quotePercentChg = cryptoQuote.percent_change_24h.toFixed(2).padStart(5, " ")
+                let quotePrice = cryptoQuote.price.toFixed(2)
+                let quotePercentChg = cryptoQuote.percent_change_24h.toFixed(2)
 
-                if (quotePercentChg >= (1*thresholdNum) || quotePercentChg <= (-1 * thresholdNum)) {
+                if (quotePercentChg >= (1 * thresholdNum) || quotePercentChg <= (-1 * thresholdNum)) {
                     //let randomEx = exclamationJSON.exclamation[Math.floor(Math.random() * exclamationJSON.exclamation.length)]
-                    outstandingText += `${x}: ${quotePrice} (${quotePercentChg}%)\n`
-                    notiArr.push(`${x}: ${quotePrice} (${quotePercentChg}%)`)
+                    outstandingText += `${x}: ${quotePrice.padStart(8, " ")} (${quotePercentChg.padStart(5, " ")}%)\n`
+                    notiArr.push(`${x}: ${quotePrice}SGD (${quotePercentChg}%)`)
                 }
                 else {
-                    fieldText += `${x}: ${quotePrice} (${quotePercentChg}%)\n`
+                    fieldText += `${x}: ${quotePrice.padStart(8, " ")} (${quotePercentChg.padStart(5, " ")}%)\n`
                 }
                 dataObj[x] = quotePrice.trim()
             }
@@ -205,7 +205,7 @@ function cryptoMax() {
             }
             if (outstandingText) {
 
-let randomEx = exclamationJSON.exclamation[Math.floor(Math.random() * exclamationJSON.exclamation.length)]
+                let randomEx = exclamationJSON.exclamation[Math.floor(Math.random() * exclamationJSON.exclamation.length)]
 
                 Embed.addField('⠀', `__*${randomEx}(+-${thresholdNum}%)*__` + '```' + outstandingText + '```', true)
                 Embed.setColor('#ff0000')
@@ -262,7 +262,7 @@ let randomEx = exclamationJSON.exclamation[Math.floor(Math.random() * exclamatio
 
                         channelCrypto.send({ files: [`./${i}.png`], embed: templateEmbed }).then(() => {
                             if (i == 0) {
-                                channelCrypto.send(Embed)
+                                
                                 if (notiArr.length > 0) {
 
                                     let now = new Date()
@@ -270,11 +270,12 @@ let randomEx = exclamationJSON.exclamation[Math.floor(Math.random() * exclamatio
                                     let cdTimestamp = parseJson.cdTimestamp
 
                                     if (now.getTime() > (cdTimestamp + cd * 60 * 1000)) {
-channelCrypto.send("[ALERT]\n" + notiArr.join('\n') + ' ' + roleCrypto)
+                                        channelCrypto.send(`[ALERT] ${roleCrypto}\n` + notiArr.join('\n'))
                                         parseJson.cdTimestamp = now.getTime()
                                         configMsg.edit(JSON.stringify(parseJson))
                                     }
                                 }
+                                channelCrypto.send(Embed)
                             }
                         })
 
@@ -314,8 +315,8 @@ async function lots_of_messages_getter(channel, limit = 300) {
         sum_messages.push(...messages.array());
         last_id = messages.last().id;
 
-        if (messages.size != 100 || sum_messages >= limit) {
-            console.log("Exited with: ", Object.keys(sum_messages).length )
+        if (messages.size != 100 || Object.keys(sum_messages).length >= limit) {
+            console.log("Exited with: ", Object.keys(sum_messages).length)
             break;
         }
     }
