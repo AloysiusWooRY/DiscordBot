@@ -186,7 +186,7 @@ function cryptoMax() {
                 if (quotePercentChg >= thresholdNum || quotePercentChg <= (-1 * thresholdNum)) {
                     //let randomEx = exclamationJSON.exclamation[Math.floor(Math.random() * exclamationJSON.exclamation.length)]
                     outstandingText += `${x}: ${quotePrice} (${quotePercentChg}%)\n`
-                    notiArr.push(`${x}: ${quotePercentChg}%`)
+                    notiArr.push(`${x}: ${quotePrice} (${quotePercentChg}%)`)
                 }
                 else {
                     fieldText += `${x}: ${quotePrice} (${quotePercentChg}%)\n`
@@ -267,7 +267,7 @@ function cryptoMax() {
                                     let cdTimestamp = parseJson.cdTimestamp
 
                                     if (now.getTime() > (cdTimestamp + cd * 60 * 1000)) {
-                                        channelCrypto.send("[ALERT] " + notiArr.join(' | ') + ' ' + roleCrypto)
+                                        channelCrypto.send("[ALERT] " + notiArr.join('\n') + ' ' + roleCrypto)
                                         parseJson.cdTimestamp = now.getTime()
                                         configMsg.edit(JSON.stringify(parseJson))
                                     }
