@@ -18,13 +18,13 @@ module.exports.run = async (bot, message, args) => {
 
 		switch (args[0]) {
 			case 'add':
-				let checkQuote = response.data.filter(d => d.symbol == args[1])
+				let checkQuote = response.data.filter(d => d.symbol == args[1].toUpperCase())
 				console.log(cryptoArr)
-				if (!cryptoArr.includes(args[1]) && checkQuote.length != 0 && cryptoArr.length <= 3) {
-					cryptoArr.push(args[1])
+				if (!cryptoArr.includes(args[1]) && checkQuote.length != 0) {
+					cryptoArr.push(args[1].toUpperCase())
 				}
 				else {
-					message.channel.send('Error: `Name not found in Database or there\'s already 3`').then(msg => { msg.delete(3000) })
+					message.channel.send('Error: `Name not found in Database!`').then(msg => { msg.delete(3000) })
 				}
 				printText(configs, cryptoArr, timeSet, threshold, cooldown)
 				break;
@@ -38,7 +38,6 @@ module.exports.run = async (bot, message, args) => {
 					message.channel.send('Error: `Name not found`').then(msg => { msg.delete(3000) })
 				}
 				printText(configs, cryptoArr, timeSet, threshold, cooldown)
-
 				break;
 
 			case 'clear':

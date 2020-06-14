@@ -192,7 +192,9 @@ function cryptoMax() {
                     fieldText += `${x}: ${quotePrice.padStart(8, " ")} (${quotePercentChg.padStart(5, " ")}%)\n`
                 }
                 dataObj[x] = quotePrice.trim()
+                
             }
+            
 
             const Embed = new Discord.RichEmbed()
                 .setTitle('__Crypto Listings__')
@@ -238,33 +240,31 @@ function cryptoMax() {
                         for (y of valueArr) {
                             targetedCrypto.push(y[cryptoArr[i]])
                         }
-                        var trace1 = {
-                            x: timeArr,
-                            y: targetedCrypto,
-                            type: "scatter"
-                        };
+                        // var trace1 = {
+                        //     x: timeArr,
+                        //     y: targetedCrypto,
+                        //     type: "scatter"
+                        // };
 
-                        var figure = { 'data': [trace1] };
+                        // var figure = { 'data': [trace1] };
 
-                        var imgOpts = {
-                            format: 'png',
-                            width: 550,
-                            height: 250,
-                        };
+                        // var imgOpts = {
+                        //     format: 'png',
+                        //     width: 550,
+                        //     height: 250,
+                        // };
 
-                        const templateEmbed = {
-                            color: 0xffffff,
-                            title: cryptoArr[i].toUpperCase(),
-                            image: {
-                                url: `attachment://${i}.png`
-                            }
-                        }
+                        // const templateEmbed = {
+                        //     color: 0xffffff,
+                        //     title: cryptoArr[i].toUpperCase(),
+                        //     image: {
+                        //         url: `attachment://${i}.png`
+                        //     }
+                        // }
 
-                        channelCrypto.send({ files: [`./${i}.png`], embed: templateEmbed }).then(() => {
+                        //channelCrypto.send({ files: [`./${i}.png`], embed: templateEmbed }).then(() => {
                             if (i == 0) {
-                                
                                 if (notiArr.length > 0) {
-
                                     let now = new Date()
                                     let cd = parseJson.cd
                                     let cdTimestamp = parseJson.cdTimestamp
@@ -277,14 +277,14 @@ function cryptoMax() {
                                 }
                                 channelCrypto.send(Embed)
                             }
-                        })
+                        //})
 
-                        plotly.getImage(figure, imgOpts, function (error, imageStream) {
-                            if (error) return console.log(error);
+                        // plotly.getImage(figure, imgOpts, function (error, imageStream) {
+                        //     if (error) return console.log(error);
 
-                            var fileStream = fs.createWriteStream(`${i}.png`);
-                            imageStream.pipe(fileStream);
-                        });
+                        //     var fileStream = fs.createWriteStream(`${i}.png`);
+                        //     imageStream.pipe(fileStream);
+                        // });
                     }
                 })
             }).catch((err) => {
