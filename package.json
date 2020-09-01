@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "discord.js": "^11.4.2",
+    "moment": "^2.27.0",
     "mongoose": "^5.4.0",
     "nodemon": "^1.18.9",
     "plotly": "^1.0.6",

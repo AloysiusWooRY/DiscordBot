@@ -1,6 +1,8 @@
+const moment = require('moment');
+
 module.exports.run = async (bot, message, args) => {
 
-    message.delete()
+    message.channel.send("{\"meridies\":\"AM\"}")
 }
 
 module.exports.help = {

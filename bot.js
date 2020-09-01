@@ -4,6 +4,8 @@ const rp = require('request-promise');
 const prefix = "!" || botSettings.prefix;
 const bot = new Discord.Client({});
 const exclamationJSON = require('./exclamation.json');
+const moment = require('moment');
+const request = require('request');
 const herokuTokens = [process.env.crypt, process.env.plotlyKey, process.env.token]
 const plotly = require('plotly')("Alloy", herokuTokens[1])
 bot.commands = new Discord.Collection();
@@ -50,6 +52,7 @@ bot.on("ready", async () => {
     }
 
     cryptoMax()
+    temp()   
 
 });
 
@@ -155,6 +158,45 @@ const requestOptions = {
     },
     json: true,
 };
+
+function temp(){
+
+    let guildIs = bot.guilds.find(x => x.name === "Eh lai")
+    guildIs.channels.find(x => x.name === "tempdata").fetchMessage('750342733838942289').then(statusMsg => {
+
+        let parseJson = JSON.parse(statusMsg.content)
+        let now = moment().utcOffset(8)
+        let meridies
+        
+        if (now.format("H") == 8) meridies = 'AM'
+        else if (now.format("H") == 15) meridies = 'PM'
+        
+        if (meridies && meridies != parseJson.meridies) {
+
+            parseJson.meridies = meridies
+            console.log(now.format("DD/MM/YYYY"))
+            let payload = {
+                'groupCode': "6391aac7eed11e1993aa0e708be4f84f",
+                'date': now.format("DD/MM/YYYY"),
+                'meridies': meridies,
+                'memberId': 3123767,
+                'temperature': "36.1",
+                'pin': "2207"
+            }
+            request.post({url: "https://temptaking.ado.sg/group/MemberSubmitTemperature", form: payload}, function(err,httpResponse,body){ 
+                guildIs.channels.find(x => x.name === "test").send(body)
+                console.log(err) 
+            })
+            
+            statusMsg.edit(JSON.stringify(parseJson))            
+        }
+        else guildIs.channels.find(x => x.name === "test").send("Attempted!")
+        resetTempTimer(5*60*1000)
+
+    })
+
+    
+}
 
 function cryptoMax() {
 
@@ -326,6 +368,10 @@ async function lots_of_messages_getter(channel, limit = 300) {
 
 function resety(timeSet) {
     setTimeout(cryptoMax, timeSet)
+}
+
+function resetTempTimer(timeSet){
+    setTimeout(temp, timeSet)
 }
 
 bot.login(herokuTokens[2]);
