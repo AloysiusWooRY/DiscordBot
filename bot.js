@@ -191,7 +191,7 @@ function temp(){
             statusMsg.edit(JSON.stringify(parseJson))            
         }
         else guildIs.channels.find(x => x.name === "test").send("Attempted!")
-        resetTempTimer(5*60*1000)
+        resetTempTimer(15*60*1000)
 
     })
 
