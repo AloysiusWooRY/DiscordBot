@@ -52,7 +52,7 @@ bot.on("ready", async () => {
     }
 
     cryptoMax()
-    temp()   
+    //temp()   
 
 });
 
@@ -193,9 +193,7 @@ function temp(){
         else guildIs.channels.find(x => x.name === "test").send("Attempted!")
         resetTempTimer(15*60*1000)
 
-    })
-
-    
+    })    
 }
 
 function cryptoMax() {
